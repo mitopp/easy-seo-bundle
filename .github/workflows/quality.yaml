@@ -1,0 +1,55 @@
+name: Quality
+
+on:
+    push:
+    pull_request:
+        branches:
+            - master
+
+jobs:
+    quality:
+        name: Symfony ${{ matrix.symfony-version }} on PHP ${{ matrix.php-version }}
+
+        runs-on: ubuntu-latest
+
+        strategy:
+            fail-fast: true
+            matrix:
+                php-version:
+                    - '8.2'
+                    - '8.3'
+                symfony-version:
+                    - '7.4'
+                    - '8.0'
+
+        steps:
+            -   name: Checkout code
+                uses: actions/checkout@v4
+            -   name: Setup PHP ${{ matrix.php-version }}
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: ${{ matrix.php-version }}
+                    extensions: mbstring, intl, xml, ctype, iconv
+                    coverage: none
+            -   name: Get composer cache directory
+                id: composer-cache
+                run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+            -   name: Cache dependencies
+                uses: actions/cache@v4
+                with:
+                    path: ${{ steps.composer-cache.outputs.dir }}
+                    key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}-php${{ matrix.php-version }}-symfony${{ matrix.symfony-version }}
+                    restore-keys: ${{ runner.os }}-composer-
+            -   name: Setup Symfony ${{ matrix.symfony-version }}
+                if: matrix.symfony-version != ''
+                run: composer config extra.symfony.require "${{ matrix.symfony-version }}.*"
+            -   name: Install dependencies
+                run: composer install --prefer-dist --no-progress --optimize-autoloader
+            -   name: Run PHP-CS-Fixer
+                run: tools/php-cs-fixer check --diff
+            -   name: Run Rector
+                run: tools/rector --dry-run
+            -   name: Run PHPStan
+                run: tools/phpstan analyse --no-progress
+            -   name: Run PHPUnit
+                run: tools/phpunit

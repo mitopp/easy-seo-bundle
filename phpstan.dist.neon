@@ -1,0 +1,11 @@
+includes:
+    - phpstan-baseline.dist.neon
+
+parameters:
+    level: max
+    paths:
+        - config/
+        - src/
+    parallel:
+        maximumNumberOfProcesses: 4
+    excludePaths:

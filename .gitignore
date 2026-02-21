@@ -1,0 +1,6 @@
+/vendor/
+.phpunit.cache/
+.junie/
+config/reference.php
+.php-cs-fixer.cache
+composer.lock

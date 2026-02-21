@@ -1,0 +1,171 @@
+{% extends '@WebProfiler/Profiler/layout.html.twig' %}
+
+{% block toolbar %}
+    {% set icon %}
+        <svg xmlns="http://www.w3.org/2000/svg" data-icon-name="icons-tabler-outline icon-tabler-device-ipad-horizontal-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" role="img">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+            <path d="M11.5 20h-6.5a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v5.5"></path>
+            <path d="M9 17h2"></path>
+            <path d="M15 18a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path>
+            <path d="M20.2 20.2l1.8 1.8"></path>
+        </svg>
+    {% endset %}
+
+    {% set text %}
+        <div class="sf-toolbar-info-piece">
+            <b>Title</b>
+            <span>{{ collector.title }}</span>
+        </div>
+
+        {% for status, messages in collector.status %}
+            <div class="sf-toolbar-info-piece">
+                <b>{{ status|title }}</b>
+                <span class="sf-toolbar-status">{{ messages|length }}</span>
+            </div>
+        {% endfor %}
+    {% endset %}
+
+    {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', { 'link': true }) }}
+{% endblock %}
+
+{% block menu %}
+    <span class="label">
+        <span class="icon">
+            <svg xmlns="http://www.w3.org/2000/svg" data-icon-name="icons-tabler-outline icon-tabler-device-ipad-horizontal-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" role="img">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                <path d="M11.5 20h-6.5a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v5.5"></path>
+                <path d="M9 17h2"></path>
+                <path d="M15 18a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path>
+                <path d="M20.2 20.2l1.8 1.8"></path>
+            </svg>
+        </span>
+        <strong>Easy SEO</strong>
+    </span>
+{% endblock %}
+
+{% block panel %}
+    <h2>Easy SEO</h2>
+
+    <div class="metric-group">
+        {% for status, messages in collector.status %}
+            <div class="metric">
+                <span class="value">{{ messages|length }}</span>
+                <span class="label">{{ status|title }}</span>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% for status, messages in collector.status %}
+        {% if messages is not empty %}
+            <h3>{{ status|title }}</h3>
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endfor %}
+
+    <h2>Configuration</h2>
+
+    {% set config = collector.configAsArray %}
+    {% if config is empty %}
+        <div class="empty">
+            <p>There are no config values.</p>
+        </div>
+    {% else %}
+        <table>
+            <thead>
+            <tr>
+                <th scope="col">Key</th>
+                <th scope="col">Value</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for key, value in config %}
+                <tr>
+                    <th class="font-normal">{{ key|title }}</th>
+                    <td class="font-normal">{{ value }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    <h2>General</h2>
+    {% set generals = {
+        title: collector.title,
+    } %}
+    <table>
+        <thead>
+        <tr>
+            <th scope="col">Key</th>
+            <th scope="col">Value</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for key, value in generals %}
+            <tr>
+                <th class="font-normal">{{ key|title }}</th>
+                <td class="font-normal">{{ value }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Meta Tags</h2>
+    {% set metaTags = collector.metaTags|sort %}
+    {% if metaTags is empty %}
+        <div class="empty">
+            <p>There are no meta-tags.</p>
+        </div>
+    {% else %}
+        <table>
+            <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Content</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for metaTag in metaTags %}
+                {# @var Mitopp\EasySeoBundle\Domain\Meta\MetaTag metaTag #}
+                <tr>
+                    <th class="font-normal">{{ metaTag.name }}</th>
+                    <td class="font-normal">{{ metaTag.content }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    <h2>Breadcrumbs</h2>
+    {% set breadcrumbs = collector.breadcrumbs %}
+    {% if breadcrumbs is empty %}
+        <div class="empty">
+            <p>There are no breadcrumbs.</p>
+        </div>
+    {% else %}
+        <table>
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Label</th>
+                <th scope="col">Title</th>
+                <th scope="col">Url</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for breadcrumb in breadcrumbs %}
+                {# @var \Mitopp\EasySeoBundle\Domain\Breadcrumb\Breadcrumb breadcrumb #}
+                <tr>
+                    <td class="font-normal text-muted nowrap">{{ loop.index }}</td>
+                    <th class="break-long-words">{{ breadcrumb.label }}</th>
+                    <td class="break-long-words">{{ breadcrumb.title }}</td>
+                    <td class="break-long-words">{{ breadcrumb.url }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}

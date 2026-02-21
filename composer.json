@@ -1,0 +1,69 @@
+{
+    "name": "mitopp/easy-seo-bundle",
+    "description": "Easy SEO Bundle for Symfony",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Michael Topp",
+            "email": "michael.topp@outlook.de"
+        }
+    ],
+    "require": {
+        "php": ">=8.2",
+        "symfony/framework-bundle": "^7.4 || ^8.0",
+        "symfony/twig-bundle": "^7.4 || ^8.0",
+        "twig/twig": "^3.23"
+    },
+    "require-dev": {
+        "nyholm/symfony-bundle-test": "^3.1",
+        "symfony/profiler-pack": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Mitopp\\EasySeoBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Mitopp\\EasySeoBundle\\Tests\\Integration\\": "tests/Integration",
+            "Mitopp\\EasySeoBundle\\Tests\\Unit\\": "tests/Unit"
+        }
+    },
+    "scripts": {
+        "check": [
+            "@composer validate --strict",
+            "@composer check-platform-reqs",
+            "@composer audit",
+            "./tools/php-cs-fixer check",
+            "./tools/phpstan analyse",
+            "./tools/rector --dry-run",
+            "./tools/phpunit"
+        ]
+    },
+    "scripts-descriptions": {
+        "check": "Run all quality insurance checks"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "symfony": {
+            "allow-contrib": false,
+            "require": "7.4.*"
+        },
+        "cotor": {
+            "extensions": {
+                "phpstan/phpstan": {
+                    "phpstan/phpstan-deprecation-rules": "^2.0",
+                    "phpstan/phpstan-symfony": "^2.0"
+                }
+            },
+            "friendsofphp/php-cs-fixer": "^3.94",
+            "phpstan/phpstan": "^2.1",
+            "phpunit/phpunit": "^11.5",
+            "rector/rector": "^2.3",
+            "vincentlanglet/twig-cs-fixer": "^3.13"
+        }
+    }
+}
