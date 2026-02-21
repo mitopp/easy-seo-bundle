@@ -4,7 +4,7 @@
 
 - [x] Title
 - [x] Meta Tags
-- [ ] Breadcrumbs
+- [x] Breadcrumbs
 - [ ] Schema.org
   - [ ] Website
 
