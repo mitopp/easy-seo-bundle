@@ -8,13 +8,14 @@ use Mitopp\EasySeoBundle\Domain\Breadcrumb\Breadcrumb;
 use Mitopp\EasySeoBundle\Domain\SeoManagerInterface;
 use Mitopp\EasySeoBundle\Twig\SeoExtension;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Twig\Markup;
 
 #[CoversClass(SeoExtension::class)]
 final class SeoExtensionTest extends TestCase
 {
-    private \PHPUnit\Framework\MockObject\MockObject $seoManager;
+    private MockObject $seoManager;
 
     private SeoExtension $extension;
 
@@ -48,7 +49,7 @@ final class SeoExtensionTest extends TestCase
         $this->assertStringContainsString('<script type="application/ld+json">', $content);
 
         // Extract and verify JSON-LD data
-        $jsonPart = '';
+        $jsonPart = null;
         if (preg_match('/<script type="application\/ld\+json">(.*)<\/script>/s', $content, $matches)) {
             $jsonPart = $matches[1];
         }
