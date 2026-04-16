@@ -62,6 +62,15 @@ final class SeoExtensionTest extends TestCase
         $this->assertCount(3, $data['itemListElement']);
         $this->assertSame(1, $data['itemListElement'][0]['position']);
         $this->assertSame('Home', $data['itemListElement'][0]['name']);
-        $this->assertSame('https://example.com/', $data['itemListElement'][0]['item']);
+        $this->assertSame('https://example.com/', $data['itemListElement'][0]['item']['@id']);
+
+        $this->assertSame(2, $data['itemListElement'][1]['position']);
+        $this->assertSame('Products', $data['itemListElement'][1]['name']);
+        $this->assertSame('https://example.com/products', $data['itemListElement'][1]['item']['@id']);
+
+        $this->assertSame(3, $data['itemListElement'][2]['position']);
+        $this->assertSame('Product A', $data['itemListElement'][2]['name']);
+        // The last item might not have a URL in the breadcrumb model, but Schema.org likes an @id.
+        // If no URL is available, we'll see what's best. Current implementation has no URL for the last item.
     }
 }

@@ -86,7 +86,9 @@ final readonly class SeoExtension
             ];
 
             if (null !== $breadcrumb->getUrl()) {
-                $item['item'] = $breadcrumb->getUrl();
+                $item['item'] = [
+                    '@id' => $breadcrumb->getUrl(),
+                ];
             }
 
             $itemListElement[] = $item;
