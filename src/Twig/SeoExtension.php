@@ -37,6 +37,11 @@ final readonly class SeoExtension
     public function generateBreadcrumbs(): Markup
     {
         $breadcrumbs = $this->seoManager->getBreadcrumbs();
+
+        if ([] === $breadcrumbs) {
+            return new Markup('', 'UTF-8');
+        }
+
         $rendered = '<ol class="breadcrumb" aria-label="breadcrumb">';
 
         $itemListElement = [];
